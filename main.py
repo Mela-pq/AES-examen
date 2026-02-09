@@ -1,4 +1,3 @@
-# PARTE 1: SUBBYTES 
 #Esta tabla contiene los 256 valores de sustitución de AES
 S_BOX = [
 0x63,0x7C,0x77,0x7B,0xF2,0x6B,0x6F,0xC5,0x30,0x01,0x67,0x2B,0xFE,0xD7,0xAB,0x76,
@@ -18,7 +17,42 @@ S_BOX = [
 0xE1,0xF8,0x98,0x11,0x69,0xD9,0x8E,0x94,0x9B,0x1E,0x87,0xE9,0xCE,0x55,0x28,0xDF,
 0x8C,0xA1,0x89,0x0D,0xBF,0xE6,0x42,0x68,0x41,0x99,0x2D,0x0F,0xB0,0x54,0xBB,0x16
 ]
+#Funciones
 
+#Para saber cuantas filas y 
+# columnas tiene la matriz.
+
+def dimension (matriz):
+    filas = len(matriz)
+    if filas > 0:
+        columnas = len(matriz[0])
+    else:
+        columnas = 0
+    return filas, columnas
+
+#manera de imprimir  con un diseño .
+
+def imprimir (A):
+    f, c = dimension (A)
+    for i in range(0, f):
+        print ("| ", end = "") # end = "" es para no imprimir un salto de línea al final del print
+        for j in range(0, c):
+            print ("{:>5} |".format(A[i][j]), end = "")
+        print("") #Imprime un salto de línea
+
+#matriz llena de ceros
+
+def inicializar (nf, nc):
+    A = [] #Lista vacía
+    for i in range (nf):
+        fila = [0] * nc # nueva fila
+        A.append(fila) # aumente una copia de la fila            
+    return A
+
+# PARTE 1: SUB_BYTES 
+#Remplaza cada numero de la matriz original
+#por un numero de S_BOX
+#debuelve una nueva matriz con otros valores
 
 def sub_bytes(m):
     # nueva_matriz representará los corchetes exteriores: [[ ..]]
@@ -31,9 +65,10 @@ def sub_bytes(m):
         nueva_fila = [] 
         
         #  recorre cada byte (número) dentro de esa fila
-        for b in fila:
+        
+        for byte in fila:
             #  busca el valor de sustitución en la tabla
-            nuevo_valor = S_BOX[b]
+            nuevo_valor = S_BOX[byte]
             
             # Guardamos el resultado en nuestra nueva fila
             nueva_fila.append(nuevo_valor)
@@ -41,4 +76,44 @@ def sub_bytes(m):
         # Una vez terminada la fila, la añadimos a la matriz principal
         nueva_matriz.append(nueva_fila)
         
+        
     return nueva_matriz
+ 
+
+#ShiftRows: Desplazamiento cíclico de las filas de la matriz.
+#cada matriz se desplaza a la izquierda 
+#cada fila se mueve una cantidad diferente
+
+#Reglas 
+
+#Matriz 4x4 bytes 
+
+#Fila 0	 No se mueve
+#Fila 1	 1 posición a la izquierda
+#Fila 2	 2 posiciones a la izquierda
+#Fila 3	 3 posiciones a la izquierda
+#fila[i:]+ fila[:i] i es el numero o la cantidad
+#de movimientos y permite cambiar el orden de la matriz
+
+def shiftRows (m):
+    
+    nueva_matriz=[]
+    
+    for i in range(4):
+        
+        fila= m[i]
+        
+        nueva_fila= fila[i:]+ fila[:i]
+        
+        nueva_matriz.append(nueva_fila)
+        
+    return nueva_matriz  
+      
+#MixColumns: Mezcla los datos de cada columna matemáticamente.
+#AddRoundKey: XOR entre los datos y la clave de la ronda actual.
+
+ 
+
+
+
+
